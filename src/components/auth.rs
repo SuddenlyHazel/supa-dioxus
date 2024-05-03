@@ -1,9 +1,11 @@
 #![allow(non_snake_case)]
 
 use dioxus::prelude::*;
+use gloo::dialogs::alert;
+use supabase_js_rs::Credentials;
 
 use crate::{
-    client::auth::User,
+    client::auth::{signin_with_password, User},
     components::{
         button::Button,
         input::{PasswordInput, TextInput},
