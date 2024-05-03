@@ -9,14 +9,20 @@ pub fn FlexStack(class: Option<String>, children: Element) -> Element {
     );
     rsx! {
       div {
-        class: {class},
+        class: class,
         {children}
       }
     }
 }
 
 #[component]
-pub fn Modal(title: String, body_children: Element, footer_children: Element, is_open: bool, on_close: EventHandler<()>) -> Element {
+pub fn Modal(
+    title: String,
+    body_children: Element,
+    footer_children: Element,
+    is_open: bool,
+    on_close: EventHandler<()>,
+) -> Element {
     let modal = rsx! {
       div {
         class: "fixed inset-0 z-40 bg-gray-900 bg-opacity-50 dark:bg-opacity-80",
@@ -58,8 +64,8 @@ pub fn Modal(title: String, body_children: Element, footer_children: Element, is
     };
 
     if is_open {
-      modal
+        modal
     } else {
-      rsx!()
+        rsx!()
     }
 }

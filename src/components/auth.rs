@@ -1,11 +1,9 @@
 #![allow(non_snake_case)]
 
 use dioxus::prelude::*;
-use gloo::dialogs::alert;
-use supabase_js_rs::Credentials;
 
 use crate::{
-    client::auth::{signin_with_password, User},
+    client::auth::User,
     components::{
         button::Button,
         input::{PasswordInput, TextInput},
@@ -21,7 +19,7 @@ pub fn Auth(on_success: EventHandler<User>) -> Element {
         spawn(async move {
             client! {
               let res = signin_with_password(Credentials { email: email.to_string(), password: password.to_string() }).await;
-             
+
               if let Ok(session) = res {
                 email.set("".into());
                 password.set("".into());

@@ -85,7 +85,7 @@ pub fn SelectInput(
     i_value: String,
     on_input: EventHandler<FormEvent>,
     class: Option<String>,
-    options: Vec<(String, String)>
+    options: Vec<(String, String)>,
 ) -> Element {
     rsx! {
       select {

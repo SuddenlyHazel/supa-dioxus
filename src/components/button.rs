@@ -17,9 +17,14 @@ pub fn Button(text: String, class: Option<String>, on_click: EventHandler<MouseE
 }
 
 #[component]
-pub fn ButtonAlt(text: String, class: Option<String>, on_click: EventHandler<MouseEvent>, range: Option<Range<i64>>) -> Element {
+pub fn ButtonAlt(
+    text: String,
+    class: Option<String>,
+    on_click: EventHandler<MouseEvent>,
+    range: Option<Range<i64>>,
+) -> Element {
     let class = class.unwrap_or_else(|| "".to_string());
-    
+
     rsx! {
       button {
         onclick: move |evt| on_click.call(evt),

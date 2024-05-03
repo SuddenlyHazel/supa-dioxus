@@ -4,8 +4,8 @@ use crate::pages::routes::{protected, Routes};
 
 #[component]
 pub fn Protected() -> Element {
-    protected(Routes::Login {}, Routes::Protected { });
-    
+    protected(Routes::Login {}, Routes::Protected {});
+
     rsx! {
         div {
             class: "max-w-lg mx-auto py-2",

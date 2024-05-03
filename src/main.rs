@@ -12,7 +12,7 @@ mod pages;
 use client::auth::AuthorizedClient;
 use dioxus::prelude::*;
 
-use tracing::{info, Level};
+use tracing::Level;
 
 use crate::pages::routes::{GuardContext, Router as AppRouter};
 

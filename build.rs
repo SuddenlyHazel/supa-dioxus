@@ -7,7 +7,7 @@ use std::io::Write;
 fn main() {
     println!("cargo:rerun-if-changed=.env");
     let dest_path = "./src/env.rs";
-    let mut f = File::create(&dest_path).unwrap();
+    let mut f = File::create(dest_path).unwrap();
 
     // use the dotenv crate to get the .env values
     dotenv().ok();
@@ -18,7 +18,7 @@ fn main() {
             let line = format!(
                 "pub const {}: &'static str = \"{}\";\n",
                 key,
-                value.replace("\"", "\\\"")
+                value.replace('"', "\\\"")
             );
             f.write_all(line.as_bytes()).unwrap();
         }

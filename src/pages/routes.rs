@@ -1,7 +1,6 @@
-
 use dioxus::prelude::{Router as DRouter, *};
 
-use crate::client::auth::{self, get_user};
+use crate::client::auth::get_user;
 
 use super::{home::Home, login::Login, protected::Protected};
 
@@ -68,27 +67,26 @@ impl GuardContext {
 
 fn on_not_authorized<F>(f: F)
 where
-    F: Fn(()) -> () + 'static,
+    F: Fn(()) + 'static,
 {
     spawn(async move {
         let user = get_user().await;
-        if let Err(_) = user {
+        if user.is_err() {
             f(());
         }
     });
 }
 
-/// Declare a page view protected 
-/// 
+/// Declare a page view protected
+///
 /// Automatically redirect users to login and back to the page on auth success
 pub fn protected(redirect: Routes, next: Routes) {
     spawn(async move {
         let user = get_user().await;
-        if let Err(_) = user {
+        if user.is_err() {
             GuardContext::set_next(next);
             let nav = navigator();
             nav.replace(redirect);
-            return;
         }
     });
 }

@@ -1,20 +1,24 @@
 use std::future::Future;
 
-use dioxus::{prelude::{
-    server_fn::{
-        client::{browser::BrowserClient, Client},
-        request::browser::BrowserRequest,
-        response::browser::BrowserResponse,
+use dioxus::{
+    prelude::{
+        server_fn::{
+            client::{browser::BrowserClient, Client},
+            request::browser::BrowserRequest,
+            response::browser::BrowserResponse,
+        },
+        ServerFnError,
     },
-    ServerFnError,
-}, signals::{GlobalSignal, Readable, Signal}};
+    signals::{GlobalSignal, Readable, Signal},
+};
 use gloo::storage::Storage;
 use supabase_js_rs::*;
 use wasm_bindgen::{closure::Closure, JsValue};
 
 use crate::env;
-    
-pub static CLIENT: GlobalSignal<supabase_js_rs::SupabaseClient> = Signal::global(|| create_client());
+
+pub static CLIENT: GlobalSignal<supabase_js_rs::SupabaseClient> =
+    Signal::global(create_client);
 
 // auth funcs https://github.com/supabase/auth-js/blob/59ec9affa01c780fb18f668291fa7167a65c391d/src/GoTrueClient.ts#L1152
 // https://github.com/supabase/auth-js/blob/59ec9affa01c780fb18f668291fa7167a65c391d/src/lib/types.ts#L325
@@ -89,9 +93,7 @@ pub async fn get_user() -> Result<User, AuthError> {
 
 pub async fn on_state_change() {
     let auth = CLIENT.read().auth();
-    auth.on_auth_state_change(&Closure::new(move |event: JsValue, session: JsValue| {
-
-    }));
+    auth.on_auth_state_change(&Closure::new(move |event: JsValue, session: JsValue| {}));
 }
 
 // signin_with_password types
