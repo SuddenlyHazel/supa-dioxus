@@ -13,7 +13,18 @@ APP_PUBLIC_SUPABASE_ANON_KEY=<Your supabase anon key>
 DB_URI=<The connection uri for supabase project>
 ```
 
-3. Run the following command in the root of the project to start the tailwind CSS compiler:
+4. Optional.. If using VS Code configure your workspace as follows for additional type helping 
+```json
+{
+  "tailwindCSS.experimental.classRegex": ["class: \"(.*)\""],
+  "tailwindCSS.includeLanguages": {
+    "rust": "html"
+  },
+  "rust-analyzer.cargo.allFeatures": true,
+}
+```
+
+5. Run the following command in the root of the project to start the tailwind CSS compiler:
 
 ```bash
 npx tailwindcss -i ./input.css -o ./assets/tailwind.css --watch
