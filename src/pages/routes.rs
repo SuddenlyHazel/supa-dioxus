@@ -1,11 +1,12 @@
 use dioxus::prelude::{Router as DRouter, *};
 
-use crate::client::auth::get_user;
+use crate::{client::auth::get_user, components::layout::Nav};
 
 use super::{home::Home, login::Login, protected::Protected};
 
 #[derive(Clone, Routable, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Routes {
+    #[layout(Wrapper)]
     #[route("/")]
     Home {},
 
@@ -14,6 +15,21 @@ pub enum Routes {
 
     #[route("/protected")]
     Protected {},
+}
+
+pub fn Wrapper() -> Element {
+    rsx! {
+        header {
+            class: "absolute inset-x-0 top-0 z-50",
+            Nav {
+                nav_items: vec![]
+            }
+        }
+        div {
+            class: "relative isolate pt-16",
+            Outlet::<Routes> {}
+        }
+    }
 }
 
 /// Register the protected state of routes here

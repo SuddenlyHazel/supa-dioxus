@@ -69,3 +69,77 @@ pub fn Modal(
         rsx!()
     }
 }
+
+#[component]
+pub fn List(class: Option<String>, list_item_class: Option<String>, children: Vec<(Element, String)>) -> Element {
+    let class = format!(
+        "divide-y divide-gray-200 {}",
+        class.unwrap_or_else(|| "".to_string())
+    );
+    
+    let list_item_class = format!("py-4 {}", list_item_class.unwrap_or_else(|| "".to_string()));
+    rsx! {
+      ul {
+        role: "list",
+        class: class,
+        for child in children {
+          li {
+            key: "{child.1}",
+            class: list_item_class.clone(),
+            {child.0}
+          }
+        }
+      }
+    }
+}
+
+#[component]
+pub fn NavLink(to : IntoRoutable, text : String) -> Element {
+  rsx! {
+    Link {
+      active_class: "text-white font-bold underline decoration-white",
+      class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium",
+      to: to,
+      {text}
+    }
+  }
+}
+
+#[component]
+pub fn Nav(nav_items : Vec<Element>) -> Element {
+    rsx! {
+      nav {
+        class: "bg-slate-900",
+        div {
+          class: "mx-auto max-w-7xl px-2 sm:px-6 lg:px-8",
+          div {
+            class: "relative flex h-16 items-center justify-between",
+            div {
+              class: "absolute inset-y-0 left-0 flex items-center sm:hidden",
+            }
+            //       <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+            div {
+                class: "flex flex-1 items-center justify-center sm:items-stretch sm:justify-start",
+                div {
+                  class: "flex flex-shrink-0 items-center",
+                  span {
+                    class: "font-bold text-2xl",
+                    "SupaDioxus"
+                  }
+                }
+                div {
+                  class: "sm:ml-6 sm:block",
+                  div {
+                    class: "flex space-x-4",
+                    for nav in nav_items {
+                      {nav}
+                    }
+                  }
+                }
+            }
+          }
+        }
+      }
+    }
+}
+

@@ -9,6 +9,8 @@ pub mod client;
 mod env;
 mod pages;
 
+const _TAILWIND_URL: &str = manganis::mg!(file("assets/tailwind.css"));
+
 use client::auth::AuthorizedClient;
 use dioxus::prelude::*;
 
@@ -25,7 +27,15 @@ fn main() {
         info!("loaded env vars");
     });
 
-    LaunchBuilder::fullstack().launch(App);
+    let builder = LaunchBuilder::fullstack();
+    let mut config = dioxus::fullstack::Config::new();
+
+    #[cfg(feature = "server")]
+    {
+        config = config.addr(std::net::SocketAddr::from(([0, 0, 0, 0], 8080)));
+    }
+
+    builder.with_cfg(config).launch(App);
 }
 
 fn App() -> Element {

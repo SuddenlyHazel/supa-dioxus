@@ -32,6 +32,8 @@ sea-orm = { version = "0.12.15", features = [
 http = {version = "1.1.0", optional = true}
 postgrest = {version = "1.6.0", optional = true}
 dotenv = { version = "0.15.0", optional = true }
+uuid = { version = "1.8.0", features = ["serde", "v4"]}
+manganis = "0.2.2"
 
 [build-dependencies]
 dotenv = "0.15.0"
