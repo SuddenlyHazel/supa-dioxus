@@ -12,13 +12,15 @@ use dioxus::{
     signals::{GlobalSignal, Readable, Signal},
 };
 use gloo::storage::Storage;
+use serde_json::Value;
+use serde_wasm_bindgen::to_value;
 use supabase_js_rs::*;
+use tracing::debug;
 use wasm_bindgen::{closure::Closure, JsValue};
 
 use crate::env;
 
-pub static CLIENT: GlobalSignal<supabase_js_rs::SupabaseClient> =
-    Signal::global(create_client);
+pub static CLIENT: GlobalSignal<SupabaseClient> = Signal::global(create_client);
 
 // auth funcs https://github.com/supabase/auth-js/blob/59ec9affa01c780fb18f668291fa7167a65c391d/src/GoTrueClient.ts#L1152
 // https://github.com/supabase/auth-js/blob/59ec9affa01c780fb18f668291fa7167a65c391d/src/lib/types.ts#L325
@@ -120,6 +122,12 @@ pub struct UserWithSession {
     session: Session,
 }
 
+#[derive(serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Options {
+    pub redirect_to: String,
+}
+
 pub async fn signin_with_password(
     credentials: Credentials,
 ) -> Result<UserWithSession, AuthResponseError> {
@@ -137,6 +145,49 @@ pub async fn signin_with_password(
         });
     }
     panic!("todo error")
+}
+
+pub async fn signin_with_google() {
+    let auth = CLIENT.read().auth();
+    if let Ok(res) = auth
+        .sign_in_with_oauth(SignInWithOAuthCredentials {
+            provider: "google".to_string(),
+            options: to_value(&Options {
+                redirect_to: "http://localhost:8081/callback".to_string(),
+            })
+            .unwrap(),
+        })
+        .await
+    {
+        debug!("{res:?}");
+        return;
+    }
+    panic!("todo error");
+}
+
+pub async fn set_session(access_token: String, refresh_token: String) {
+    let auth = CLIENT.read().auth();
+    if let Ok(res) = auth
+        .set_session(CurrentSession {
+            access_token,
+            refresh_token,
+        })
+        .await
+    {
+        debug!("{res:?}");
+        return;
+    }
+    panic!("todo error");
+}
+
+pub async fn signout() -> Result<(), AuthResponseError> {
+    let auth = CLIENT.read().auth();
+    if let Ok(res) = auth.sign_out().await {
+        let res = serde_wasm_bindgen::from_value::<Value>(res).unwrap();
+        debug!("{res:?}");
+        return Ok(());
+    }
+    Err(AuthResponseError {})
 }
 
 fn create_client() -> SupabaseClient {

@@ -1,8 +1,8 @@
 use dioxus::prelude::{Router as DRouter, *};
 
+use super::{home::Home, login::Login, protected::Protected, callback::Callback};
+use crate::components::layout::NavLink;
 use crate::{client::auth::get_user, components::layout::Nav};
-
-use super::{home::Home, login::Login, protected::Protected};
 
 #[derive(Clone, Routable, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Routes {
@@ -15,20 +15,25 @@ pub enum Routes {
 
     #[route("/protected")]
     Protected {},
+
+    #[route("/callback")]
+    Callback {},
 }
 
+#[component]
 pub fn Wrapper() -> Element {
     rsx! {
-        header {
-            class: "absolute inset-x-0 top-0 z-50",
+        header { class: "absolute inset-x-0 top-0 z-50",
             Nav {
-                nav_items: vec![]
+                nav_items: vec![
+                    rsx! {
+                        NavLink { to : NavigationTarget::from(Routes::Protected {}), text :
+                        "Protected" }
+                    },
+                ],
             }
         }
-        div {
-            class: "relative isolate pt-16",
-            Outlet::<Routes> {}
-        }
+        div { class: "relative isolate pt-16", Outlet::<Routes> {} }
     }
 }
 
@@ -39,24 +44,26 @@ fn is_guarded(current: Routes) -> bool {
         Routes::Home {} => false,
         Routes::Login {} => false,
         Routes::Protected {} => true,
+        Routes::Callback { .. } => false,
     }
 }
 
 #[component]
 pub fn Router() -> Element {
     rsx! {
-      DRouter::<Routes> {
-        config: || {
-          RouterConfig::default().on_update(|state| {
-            if is_guarded(state.current()) {
-              on_not_authorized(move |_| {
-                GuardContext::set_next(state.current());
-              });
-            }
-            None
-          })
+        DRouter::<Routes> {
+            config: || {
+                RouterConfig::default()
+                    .on_update(|state| {
+                        if is_guarded(state.current()) {
+                            on_not_authorized(move |_| {
+                                GuardContext::set_next(state.current());
+                            });
+                        }
+                        None
+                    })
+            },
         }
-      }
     }
 }
 
@@ -77,6 +84,8 @@ impl GuardContext {
         let next_maybe = guard.write().next.take();
         if let Some(next) = next_maybe {
             nav.push(next);
+        } else {
+            nav.push(Routes::Home {});
         }
     }
 }

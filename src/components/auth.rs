@@ -34,27 +34,24 @@ pub fn Auth(on_success: EventHandler<User>) -> Element {
     };
 
     rsx! {
-      label {
-        "Email"
-        TextInput {
-            i_value: email,
-            on_input: move |event: FormEvent| {
-              email.set(event.value());
-            },
-        },
-      }
-      label {
-        "Password"
-        PasswordInput {
-            i_value: password,
-            on_input: move |event: FormEvent| {
-              password.set(event.value());
-            },
-        },
-      }
-      Button {
-        text: "Login",
-        on_click: login
-      }
+        label {
+            "Email"
+            TextInput {
+                i_value: email,
+                on_input: move |event: FormEvent| {
+                    email.set(event.value());
+                },
+            }
+        }
+        label {
+            "Password"
+            PasswordInput {
+                i_value: password,
+                on_input: move |event: FormEvent| {
+                    password.set(event.value());
+                },
+            }
+        }
+        Button { text: "Login", on_click: login }
     }
 }
