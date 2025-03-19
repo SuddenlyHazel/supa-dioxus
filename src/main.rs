@@ -3,52 +3,41 @@ mod components;
 
 #[cfg(feature = "server")]
 mod server;
-
 pub mod client;
 
 mod env;
 mod pages;
 
-const _TAILWIND_URL: &str = manganis::mg!(file("assets/tailwind.css"));
+use dioxus::document::Stylesheet;
+use dioxus::prelude::*;
+use tracing::info;
 
 use client::auth::AuthorizedClient;
-use dioxus::prelude::*;
-
-use tracing::{info, Level};
-
 use crate::pages::routes::{GuardContext, Router as AppRouter};
 
+const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
+
 fn main() {
-    // Init logger
-    dioxus_logger::init(Level::INFO).expect("failed to init logger");
+    dioxus::logger::initialize_default();
 
     server_only!({
         dotenv::dotenv().ok();
-        info!("loaded env vars");
+        info!("loaded env variables");
     });
-
-    let builder = LaunchBuilder::fullstack();
-    let mut config = dioxus::fullstack::Config::new();
-
-    #[cfg(feature = "server")]
-    {
-        config = config.addr(std::net::SocketAddr::from(([0, 0, 0, 0], 8080)));
-    }
-
-    builder.with_cfg(config).launch(App);
+    
+    dioxus::launch(App);
 }
 
+#[component]
 fn App() -> Element {
     let _guard_context = use_context_provider(|| Signal::new(GuardContext::default()));
 
     rsx! {
         head {
-            script {
-                src: "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-            }
+            script { src: "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" }
         }
+        Stylesheet { href: TAILWIND_CSS }
         AppRouter {
-
         }
     }
 }
@@ -68,8 +57,7 @@ async fn get_server_data() -> Result<String, ServerFnError> {
         .table("created_tasks")
         .select("*")
         .execute()
-        .await
-        .unwrap();
+        .await?;
 
     info!("{:#?}", resp.text().await);
     Ok("Hello from the server!".to_string())

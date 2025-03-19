@@ -8,11 +8,11 @@ use dioxus::prelude::*;
 pub fn Button(text: String, class: Option<String>, on_click: EventHandler<MouseEvent>) -> Element {
     let class = class.unwrap_or_else(|| "".to_string());
     rsx! {
-      button {
-        onclick: move |evt| on_click.call(evt),
-        class: "{class} btn-primary",
-        "{text}"
-      }
+        button {
+            onclick: move |evt| on_click.call(evt),
+            class: "{class} btn-primary",
+            "{text}"
+        }
     }
 }
 
@@ -26,10 +26,6 @@ pub fn ButtonAlt(
     let class = class.unwrap_or_else(|| "".to_string());
 
     rsx! {
-      button {
-        onclick: move |evt| on_click.call(evt),
-        class: "{class} btn-alt",
-        "{text}"
-      }
+        button { onclick: move |evt| on_click.call(evt), class: "{class} btn-alt", "{text}" }
     }
 }

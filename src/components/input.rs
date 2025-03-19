@@ -11,12 +11,12 @@ pub fn TextInput(
 ) -> Element {
     let i_placeholder = i_placeholder.unwrap_or_else(|| "".to_string());
     rsx! {
-      input {
-        value: "{i_value}",
-        class: "input-primary",
-        placeholder: "{i_placeholder}",
-        oninput: move |event| on_input.call(event)
-      }
+        input {
+            value: "{i_value}",
+            class: "input-primary",
+            placeholder: "{i_placeholder}",
+            oninput: move |event| on_input.call(event),
+        }
     }
 }
 
@@ -29,13 +29,13 @@ pub fn PasswordInput(
 ) -> Element {
     let i_placeholder = i_placeholder.unwrap_or_else(|| "".to_string());
     rsx! {
-      input {
-        r#type: "password",
-        value: "{i_value}",
-        class: "input-primary",
-        placeholder: "{i_placeholder}",
-        oninput: move |event| on_input.call(event)
-      }
+        input {
+            r#type: "password",
+            value: "{i_value}",
+            class: "input-primary",
+            placeholder: "{i_placeholder}",
+            oninput: move |event| on_input.call(event),
+        }
     }
 }
 
@@ -51,16 +51,16 @@ pub fn NumberInput(
 ) -> Element {
     let i_placeholder = i_placeholder.unwrap_or_else(|| "".to_string());
     rsx! {
-      input {
-        r#type: "number",
-        value: "{i_value}",
-        class: "input-primary",
-        placeholder: "{i_placeholder}",
-        oninput: move |event| on_input.call(event),
-        min: i_min.unwrap_or_else(|| "".to_string()),
-        max: i_max.unwrap_or_else(|| "".to_string()),
-        step: i_step.unwrap_or_else(|| "".to_string()),
-      }
+        input {
+            r#type: "number",
+            value: "{i_value}",
+            class: "input-primary",
+            placeholder: "{i_placeholder}",
+            oninput: move |event| on_input.call(event),
+            min: i_min.unwrap_or_else(|| "".to_string()),
+            max: i_max.unwrap_or_else(|| "".to_string()),
+            step: i_step.unwrap_or_else(|| "".to_string()),
+        }
     }
 }
 
@@ -71,12 +71,12 @@ pub fn DateInput(
     class: Option<String>,
 ) -> Element {
     rsx! {
-      input {
-        r#type: "date",
-        value: "{i_value}",
-        class: "input-primary",
-        oninput: move |event| on_input.call(event),
-      }
+        input {
+            r#type: "date",
+            value: "{i_value}",
+            class: "input-primary",
+            oninput: move |event| on_input.call(event),
+        }
     }
 }
 
@@ -88,16 +88,13 @@ pub fn SelectInput(
     options: Vec<(String, String)>,
 ) -> Element {
     rsx! {
-      select {
-        value: "{i_value}",
-        class: "input-select",
-        oninput: move |event| on_input.call(event),
-        for (value, display) in options {
-          option {
-            value: value,
-            "{display}"
-          }
+        select {
+            value: "{i_value}",
+            class: "input-select",
+            oninput: move |event| on_input.call(event),
+            for (value , display) in options {
+                option { value, "{display}" }
+            }
         }
-      }
     }
 }
